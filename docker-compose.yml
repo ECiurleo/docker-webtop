@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  webtop:
+    image: lscr.io/linuxserver/webtop:ubuntu-mate
+    platform: linux/amd64
+    container_name: webtop
+    privileged: true # allows DIND
+    security_opt:
+      - seccomp:unconfined # optional
+    environment:
+      - PUID=501
+      - PGID=80
+      - TZ=Etc/UTC-3
+      - SUBFOLDER=/ # optional
+      - TITLE=Webtop # optional
+    volumes:
+      - ../home-folder:/config
+      - /var/run/docker.sock:/var/run/docker.sock # optional, allows DIND
+    ports:
+      - 8888:3000
+      - 8887:3001
+    devices:
+      - /dev/dri:/dev/dri # optional
+    shm_size: "8gb" # optional
+    restart: unless-stopped
+    env_file:
+      - home-folder/settings.env
